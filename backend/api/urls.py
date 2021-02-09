@@ -7,5 +7,5 @@ urlpatterns = [
     path('add/', views.add_contact),
     path('detail/<str:pk>', views.contact_detail),
     path('delete/<str:pk>',views.delete_contact),
-    path('update/<str:pk>',views.update_contact),
+    path('update/<str:pk>',views.update_contact.as_view()),
 ]

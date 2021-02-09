@@ -2,6 +2,7 @@ from django.shortcuts import render
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import generics
 
 from .models import User, ContactsInfo
 from .Serializers import ContactSerializer, UserSerializer, ContactNameSerializer
@@ -12,7 +13,7 @@ from .Serializers import ContactSerializer, UserSerializer, ContactNameSerialize
 def contact_list(request):
 
         contacts = ContactsInfo.objects.all()
-        serializer = ContactNameSerializer(contacts, many= True)
+        serializer = ContactSerializer(contacts, many= True)
 
         return Response(serializer.data, status=200)
 
@@ -32,16 +33,15 @@ def contact_detail(request, pk):
         serializer = ContactSerializer(contacts, many= False)
         return Response(serializer.data, status=200)
 
-@api_view(['GET'])
+@api_view(['DELETE'])
 def delete_contact(request, pk):
 
-        contacts = ContactsInfo.objects.delete(id=pk)
-        serializer = ContactSerializer(contacts, many = False)
-        return Response(serializer.data, status=200)
+        contacts = ContactsInfo.objects.get(id=pk)
+        contacts.delete()
+        return Response("Contact successfully deleted", status=200)
 
-@api_view(['GET'])
-def update_contact(request, pk):
 
-        contacts = ContactsInfo.objects.update(id=pk)
-        serializer = ContactSerializer(contacts, many = False)
-        return Response(serializer.data, status=200)
+class update_contact(generics.RetrieveUpdateAPIView):
+
+      queryset = ContactsInfo.objects.all()
+      serializer_class = ContactSerializer
