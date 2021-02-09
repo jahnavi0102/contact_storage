@@ -43,5 +43,5 @@ def delete_contact(request, pk):
 def update_contact(request, pk):
 
         contacts = ContactsInfo.objects.update(id=pk)
-        serializer = ContactSerializer(contacts, many = True)
+        serializer = ContactSerializer(contacts, many = False)
         return Response(serializer.data, status=200)
